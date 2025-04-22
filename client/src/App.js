@@ -18,9 +18,26 @@ function App() {
   };
 
   const handleDeobfuscate = async () => {
-    
-    alert('This will call the server to deobfuscate');
-  };
+    try {
+      const response = await fetch('http://localhost:5000/api/deobfuscate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: codeInput, language }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        setDeobfuscatedCode(data.deobfuscatedCode);
+      } else {
+        alert(data.error || 'Something went wrong');
+      }
+    } catch (err) {
+      alert('Failed to contact server');
+      console.error(err);
+    }
+  };  
 
   return (
     <div className="app">
